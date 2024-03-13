@@ -1,4 +1,5 @@
 import ast
+import json
 import os
 
 import datasets
@@ -36,21 +37,20 @@ class CornellMovieDialog(datasets.GeneratorBasedBuilder):
 
     SPLITER = "+++$+++"
 
-    def __init__(self, **kwargs):
-        self.validation_size = 0
-        self.train_size = 0
+    validation_size = -10000
+    train_size = 0
 
-        if "train_size" in kwargs:
-            if type(kwargs.get("train_size")) is int:
-                self.train_size = kwargs.get("train_size")
-            else:
-                raise TypeError("train_size should be int")
+    def set_training_size(self, size):
+        if size > 0:
+            self.train_size = size
+        else:
+            self.train_size = 0
 
-        if "validation_size" in kwargs:
-            if type(kwargs.get("validation_size")) is int:
-                self.train_size = -1 * kwargs.get("validation_size")
-            else:
-                raise TypeError("validation_size should be int")
+    def set_validation_size(self, size):
+        if size > 0:
+            self.validation_size = -1 * size
+        else:
+            self.validation_size = size
 
     def _info(self):
         return datasets.DatasetInfo(
@@ -72,7 +72,7 @@ class CornellMovieDialog(datasets.GeneratorBasedBuilder):
                     "utterance": datasets.features.Sequence(
                         {"text": datasets.Value("string"), "LineID": datasets.Value("string")}
                     ),
-                    "dialog": datasets.features.Sequence(datasets.Value("string"))
+                    "messages": datasets.Value("string")
                 }
             ),
             # If there's a common (input, target) tuple from the features,
@@ -120,7 +120,7 @@ class CornellMovieDialog(datasets.GeneratorBasedBuilder):
                     movie_conv_data = [x.decode("latin").split(self.SPLITER) for x in f.readlines()]
         else:
             with open(movie_conv_file, "rb") as f:
-                if self.validation_size > 0:
+                if self.validation_size < 0:
                     movie_conv_data = [x.decode("latin").split(self.SPLITER) for x in f.readlines()][
                                       self.validation_size:]
                 else:
@@ -139,7 +139,7 @@ class CornellMovieDialog(datasets.GeneratorBasedBuilder):
             line_ids = conv[-1].replace("\n", "")
             line_ids = ast.literal_eval(line_ids.strip())
             lines_texts = []
-            dialog = []
+            messages = []
             # searching text corresponding to each lineID in line_ids in movie lines file
             for line_id in line_ids:
                 i = 0
@@ -147,7 +147,16 @@ class CornellMovieDialog(datasets.GeneratorBasedBuilder):
                     i += 1
                 line = movie_lines_data[i][4]
                 lines_texts.append(line)  # if i < len(movie_lines_data) else '')
-                dialog.append(f"[{movie_lines_data[i][3]}]: {line}")
+
+                message = {}
+                if len(messages) == 0:
+                    message["role"] = "user"
+                else:
+                    prevRole = messages[-1]["role"]
+                    message["role"] = "user" if prevRole == "system" else "system"
+                message["content"] = line
+
+                messages.append(message)
             # look for char names in movie character file
             j = 0
             while j < len(movie_char_data) and movie_char_data[j][0].strip() != char_id_1.strip():
@@ -182,7 +191,7 @@ class CornellMovieDialog(datasets.GeneratorBasedBuilder):
                 "characterName1": char_name_1,
                 "characterName2": char_name_2,
                 "utterance": {"text": lines_texts, "LineID": line_ids},
-                "dialog": dialog
+                "messages": json.dumps(messages)
             }
 
 
