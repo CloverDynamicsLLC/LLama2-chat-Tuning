@@ -3,7 +3,25 @@
 # Llama-2-7b-chat Fine-Tuning Project
 
 ## Introduction
-This project is an innovative approach to enhancing the Llama-2-7b-chat model, leveraging the Cornell Movie-Dialogs Corpus. The primary objective is to refine the model's conversational abilities, making it not only responsive but also proactive in engaging with users. By training the model to ask questions and sustain the conversation, we aim to create a more dynamic and interactive chatbot experience.
+Welcome to our project, where we embark on an exciting journey to enhance the conversational abilities of the Llama 2 model. Leveraging the richness of the Cornell Movie Dialog Corpus, our aim is to transcend the traditional boundaries of AI responses, transforming Llama 2 into not just a question-answering machine, but a friendly, engaging companion.
+
+## Motivation
+In its base form, the Llama 2 model is proficient in providing informative, interview-style answers. However, it often lacks the depth and continuity needed for more dynamic, human-like conversations. Recognizing this gap, we set out to fine-tune the model to foster an experience that's not just informative, but also immersive and relational.
+
+## Challenges
+1. **Adapting to Conversational Context**: One significant hurdle is teaching Llama 2 to understand and respond to the ebb and flow of casual dialogue, rather than just answering questions.
+2. **Maintaining Coherency Over Long Conversations**: Ensuring that the model can hold and reference past parts of the conversation for a more connected and coherent dialogue experience.
+3. **Injecting Personality and Engagement**: Infusing the model with a more relatable, friendly tone, departing from the often mechanical nature of AI responses.
+
+## Solution: Fine-Tuning with the Cornell Movie Dialog Corpus
+The Cornell Movie Dialog Corpus, with its vast array of conversational exchanges from movie scripts, presents an ideal dataset for this undertaking. By fine-tuning Llama 2 on these dialogues, we aim to:
+- Enhance the model's ability to participate in and sustain long-form conversations.
+- Develop a more nuanced understanding of context and emotional cues in dialogues.
+- Cultivate a conversational style that's more aligned with a friendly companion rather than a factual respondent.
+
+## Project Outcomes and Goals
+Our ultimate goal is to reshape the Llama 2 model into an AI that users find relatable, engaging, and capable of maintaining satisfying, lifelike conversations. We believe this advancement will not only elevate the user experience but also open new avenues in the realm of conversational AI.
+
 
 ## Features
 - **Dataset Preparation**: Detailed Python scripts for cleaning and structuring the Cornell Movie-Dialogs Corpus, ensuring optimal input data quality for model training.
